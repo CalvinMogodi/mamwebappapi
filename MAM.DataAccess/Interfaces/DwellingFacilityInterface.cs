@@ -7,7 +7,7 @@ namespace MAM.DataAccess.Interfaces
 {
     public interface DwellingFacilityInterface
     {
-        void AddDwellingFacility(DwellingFacility dwellingFacility);
+        int AddDwellingFacility(DwellingFacility dwellingFacility);
         void UpdateDwellingFacility(DwellingFacility dwellingFacility);
         List<DwellingFacility> GetDwellingFacilities();
         DwellingFacility GetDwellingFacilityById(int id);

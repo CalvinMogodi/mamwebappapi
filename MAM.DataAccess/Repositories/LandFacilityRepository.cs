@@ -23,12 +23,13 @@ namespace MAM.DataAccess.Repositories
             _connectionString = connectionString;
         }        
 
-        public void AddLandFacility(LandFacility landFacility)
+        public int AddLandFacility(LandFacility landFacility)
         {
             using (var db = new DataContext(_connectionString))
             {
                 db.LandFacilities.Add(landFacility);
                 db.SaveChanges();
+                return landFacility.Id;
             }
         }
 
@@ -45,7 +46,7 @@ namespace MAM.DataAccess.Repositories
         {
             using (var db = new DataContext(_connectionString))
             {
-                return db.LandFacilities.ToList();
+                return db.LandFacilities.Where(f => f.Status != 0).ToList();
             }
         }
 

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace MAM.DataAccess.Repositories
 {
-    public class NonResidentialFacilityRepository : NonResidentialFacilityInterface, IDisposable
+    public class LandRepository : LandInterface, IDisposable
     {
         // Flag: Has Dispose already been called?
         bool disposed = false;
@@ -18,51 +18,43 @@ namespace MAM.DataAccess.Repositories
 
         private string _connectionString { get; set; }
 
-        public NonResidentialFacilityRepository(string connectionString)
+        public LandRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
 
-        public int AddNonResidentialFacilities(NonResidentialFacility nonResidentialFacility)
+        public int AddLand(Land land)
         {
             using (var db = new DataContext(_connectionString))
             {
-                db.NonResidentialFacilities.Add(nonResidentialFacility);
+                db.Lands.Add(land);
                 db.SaveChanges();
-                return nonResidentialFacility.Id;
+                return land.Id;
             }
         }
 
-        public void UpdateNonResidentialFacilities(NonResidentialFacility nonResidentialFacility)
+        public Land GetLandById(int id)
         {
             using (var db = new DataContext(_connectionString))
             {
-                db.NonResidentialFacilities.Update(nonResidentialFacility);
+                return db.Lands.FirstOrDefault(b => b.Id == id);
+            }
+        }
+
+        public List<Land> GetLands()
+        {
+            using (var db = new DataContext(_connectionString))
+            {
+                return db.Lands.Select(l => l).ToList();
+            }
+        }
+
+        public void UpdateLand(Land land)
+        {
+            using (var db = new DataContext(_connectionString))
+            {
+                db.Lands.Update(land);
                 db.SaveChanges();
-            }
-        }
-
-        public List<NonResidentialFacility> GetNonResidentialFacilities()
-        {
-            using (var db = new DataContext(_connectionString))
-            {
-                return db.NonResidentialFacilities.Where(f => f.Status != 0).ToList();
-            }
-        }
-
-        public NonResidentialFacility GetNonResidentialFacilityById(int id)
-        {
-            using (var db = new DataContext(_connectionString))
-            {
-                return db.NonResidentialFacilities.FirstOrDefault(b => b.Id == id);
-            }
-        }
-
-        public List<NonResidentialFacility> GetNonResidentialFacilities(string clientCode)
-        {
-            using (var db = new DataContext(_connectionString))
-            {
-                return db.NonResidentialFacilities.Where(b => b.ClientCode.ToLower() == clientCode.ToLower()).ToList();
             }
         }
 
@@ -86,8 +78,7 @@ namespace MAM.DataAccess.Repositories
                 // Free any other managed objects here.
                 //
             }
-
             disposed = true;
-        }        
+        }
     }
 }

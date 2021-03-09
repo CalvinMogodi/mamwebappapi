@@ -9,7 +9,7 @@ using System.Text;
 
 namespace MAM.DataAccess.Repositories
 {
-    public class NonResidentialFacilityRepository : NonResidentialFacilityInterface, IDisposable
+    public class GeographicalLocationRepository : GeographicalLocationInterface, IDisposable
     {
         // Flag: Has Dispose already been called?
         bool disposed = false;
@@ -18,51 +18,43 @@ namespace MAM.DataAccess.Repositories
 
         private string _connectionString { get; set; }
 
-        public NonResidentialFacilityRepository(string connectionString)
+        public GeographicalLocationRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
 
-        public int AddNonResidentialFacilities(NonResidentialFacility nonResidentialFacility)
+        public int AddGeographicalLocation(GeographicalLocation geographicalLocation)
         {
             using (var db = new DataContext(_connectionString))
             {
-                db.NonResidentialFacilities.Add(nonResidentialFacility);
+                db.GeographicalLocations.Add(geographicalLocation);
                 db.SaveChanges();
-                return nonResidentialFacility.Id;
+                return geographicalLocation.Id;
             }
         }
 
-        public void UpdateNonResidentialFacilities(NonResidentialFacility nonResidentialFacility)
+        public void UpdateGeographicalLocation(GeographicalLocation geographicalLocation)
         {
             using (var db = new DataContext(_connectionString))
             {
-                db.NonResidentialFacilities.Update(nonResidentialFacility);
+                db.GeographicalLocations.Update(geographicalLocation);
                 db.SaveChanges();
             }
         }
 
-        public List<NonResidentialFacility> GetNonResidentialFacilities()
+        public List<GeographicalLocation> GetGeographicalLocations()
         {
             using (var db = new DataContext(_connectionString))
             {
-                return db.NonResidentialFacilities.Where(f => f.Status != 0).ToList();
+                return db.GeographicalLocations.Select(f => f).ToList();
             }
         }
 
-        public NonResidentialFacility GetNonResidentialFacilityById(int id)
+        public GeographicalLocation GetGeographicalLocationById(int id)
         {
             using (var db = new DataContext(_connectionString))
             {
-                return db.NonResidentialFacilities.FirstOrDefault(b => b.Id == id);
-            }
-        }
-
-        public List<NonResidentialFacility> GetNonResidentialFacilities(string clientCode)
-        {
-            using (var db = new DataContext(_connectionString))
-            {
-                return db.NonResidentialFacilities.Where(b => b.ClientCode.ToLower() == clientCode.ToLower()).ToList();
+                return db.GeographicalLocations.FirstOrDefault(b => b.Id == id);
             }
         }
 
@@ -88,6 +80,6 @@ namespace MAM.DataAccess.Repositories
             }
 
             disposed = true;
-        }        
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace MAM.DataAccess.Interfaces
 {
     public interface NonResidentialFacilityInterface
     {
-        void AddNonResidentialFacilities(NonResidentialFacility nonResidentialFacility);
+        int AddNonResidentialFacilities(NonResidentialFacility nonResidentialFacility);
         void UpdateNonResidentialFacilities(NonResidentialFacility nonResidentialFacility);
         List<NonResidentialFacility> GetNonResidentialFacilities();
         NonResidentialFacility GetNonResidentialFacilityById(int id);

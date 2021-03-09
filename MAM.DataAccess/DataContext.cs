@@ -21,6 +21,11 @@ namespace MAM.DataAccess
         public DbSet<NonResidentialFacility> NonResidentialFacilities { get; set; }
         public DbSet<DwellingFacility> DwellingFacilities { get; set; }
         public DbSet<FacilityStatement> FacilityStatements { get; set; }
+        public DbSet<Land> Lands { get; set; }
+        public DbSet<GeographicalLocation> GeographicalLocations { get; set; }
+        public DbSet<PropertyDescription> PropertyDescriptions { get; set; }
+        public DbSet<LandUseManagementDetail> LandUseManagementDetails { get; set; }
+        public DbSet<LeaseStatus> LeaseStatuses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

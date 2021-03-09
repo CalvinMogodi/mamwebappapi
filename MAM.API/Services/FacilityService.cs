@@ -1,4 +1,5 @@
 ﻿using MAM.BusinessLayer.Models;
+using MAM.BusinessLayer.Models.Enums;
 using MAM.BusinessLayer.Repositories;
 using Microsoft.Extensions.Options;
 using System;
@@ -15,6 +16,10 @@ namespace MAM.API.Services
         List<FacilitySummaryChart> GetFacilitySummaries();
         List<MapCoordinate> GetMapCoordinates();
         List<Facility> GetAllFacilities();
+        Facility GetFacilityById(int id, FacilityTypes facilityType);
+        Facility CreateFacility(Facility facility);
+        bool UpdateFacility(Facility facility);
+        bool DeleteFacility(Facility facility);
     }
 
     public class FacilityService : IFacilityService
@@ -64,6 +69,36 @@ namespace MAM.API.Services
             }
         }
 
-        
+        public Facility GetFacilityById(int id, FacilityTypes facilityType)
+        {
+            using (var _facilityRepository = new FacilityRepository(_appSettings))
+            {
+                return _facilityRepository.getFacilityById(id, facilityType);
+            }
+        }
+
+        public Facility CreateFacility(Facility facility)
+        {
+            using (var _facilityRepository = new FacilityRepository(_appSettings))
+            {
+                return _facilityRepository.CreateFacility(facility);
+            }
+        }
+
+        public bool UpdateFacility(Facility facility)
+        {
+            using (var _facilityRepository = new FacilityRepository(_appSettings))
+            {
+                return _facilityRepository.UpdateFacility(facility);
+            }
+        }
+
+        public bool DeleteFacility(Facility facility)
+        {
+            using (var _facilityRepository = new FacilityRepository(_appSettings))
+            {
+                return _facilityRepository.DeleteFacility(facility);
+            }
+        }
     }
 }

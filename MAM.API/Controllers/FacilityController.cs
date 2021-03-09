@@ -11,6 +11,7 @@ using log4net.Repository.Hierarchy;
 using MAM.API.Services;
 using MAM.BusinessLayer.Model;
 using MAM.BusinessLayer.Models;
+using MAM.BusinessLayer.Models.Enums;
 using MAM.BusinessLayer.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -112,6 +113,84 @@ namespace MAM.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("getFacilityByCode/{id}/{facilityType}")]
+        public IActionResult GetFacilityById(int id, FacilityTypes facilityType)
+        {
+            try
+            {
+                Facility facility = _facilityService.GetFacilityById(id, facilityType);
+                return Ok(facility);
+            }
+            catch (Exception ex)
+            {
+                log.Info("Error");
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        [Route("deleteFacility")]
+        public IActionResult DeleteFacility(Facility facility)
+        {
+            try
+            {
+                return Ok(_facilityService.DeleteFacility(facility));
+            }
+            catch (Exception ex)
+            {
+                log.Info("Error");
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        [Route("updateFacility")]
+        public IActionResult UpdateFacility(Facility facility)
+        {
+            try
+            {
+                return Ok(_facilityService.UpdateFacility(facility));
+            }
+            catch (Exception ex)
+            {
+                log.Info("Error");
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        [Route("createFacility")]
+        public IActionResult CreateFacility(Facility facility)
+        {
+            try
+            {
+                facility = _facilityService.CreateFacility(facility);
+                return Ok(facility);
+            }
+            catch (Exception ex)
+            {
+                log.Info("Error");
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        [Route("saveFacility")]
+        public IActionResult SaveFacility(Facility facility)
+        {
+            try
+            {
+                facility = _facilityService.CreateFacility(facility);
+                return Ok(facility);
+            }
+            catch (Exception ex)
+            {
+                log.Info("Error");
+                throw ex;
+            }
+        }
+                
         private static void SetLog4NetConfiguration()
         {
             XmlDocument log4netConfig = new XmlDocument();

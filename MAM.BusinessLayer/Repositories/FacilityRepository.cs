@@ -233,10 +233,12 @@ namespace MAM.BusinessLayer.Repositories
                 {                    
                     if (!string.IsNullOrEmpty(item.GPSCoordinatesEast) && !string.IsNullOrEmpty(item.GPSCoordinatesSouth))
                     {
-                        MapCoordinate mapCoordinate = new MapCoordinate() { 
+                        MapCoordinate mapCoordinate = new MapCoordinate() {
                             Longitude = item.GPSCoordinatesEast.Replace(",", "."),
                             Latitude = item.GPSCoordinatesSouth.Replace(",", "."),
-                            Description = string.Format("Dwelling: {0} - {1}", item.ClientCode, item.Name) 
+                            Description = string.Format("Dwelling: {0} - {1}", item.ClientCode, item.Name),
+                            FacilityId = item.Id,
+                            FacilityType = FacilityTypes.Dwellings
                         };
                         mapCoordinates.Add(mapCoordinate);
                     }
@@ -255,7 +257,9 @@ namespace MAM.BusinessLayer.Repositories
                         {
                             Longitude = item.GPSCoordinatesSouth,
                             Latitude = item.GPSCoordinatesEast,
-                            Description = string.Format("Land: {0} - {1}", item.ClientCode, item.Name)
+                            Description = string.Format("Land: {0} - {1}", item.ClientCode, item.Name),
+                            FacilityId = item.Id,
+                            FacilityType = FacilityTypes.Land
                         };
                         mapCoordinates.Add(mapCoordinate);
                     }
@@ -274,7 +278,9 @@ namespace MAM.BusinessLayer.Repositories
                         {
                             Longitude = item.GPSCoordinatesSouth,
                             Latitude = item.GPSCoordinatesEast,
-                            Description = string.Format("Non Residential: {0} - {1}", item.ClientCode, item.Name)
+                            Description = string.Format("Non Residential: {0} - {1}", item.ClientCode, item.Name),
+                            FacilityId = item.Id,
+                            FacilityType = FacilityTypes.NonResidentialBuildings
                         };
                         mapCoordinates.Add(mapCoordinate);
                     }
@@ -306,7 +312,117 @@ namespace MAM.BusinessLayer.Repositories
                 facilities.AddRange(_facilities);
             }
             return facilities;
-        }        
+        }
+
+        
+
+        public Facility getFacilityById(int id, FacilityTypes facilityType)
+        {
+            Facility facility = new Facility();
+            switch ((int)facilityType)
+            {
+                case 1:
+                    using (var dataAccess = new DataAccess.Repositories.DwellingFacilityRepository(appSettings.ConnectionString))
+                    {
+                        facility = facility.ConvertDBFacilityToFacility(dataAccess.GetDwellingFacilityById(id), null, null);
+                        break;
+                    }
+                case 2:
+                    using (var dataAccess = new DataAccess.Repositories.LandFacilityRepository(appSettings.ConnectionString))
+                    {
+                        facility = facility.ConvertDBFacilityToFacility(null, dataAccess.GetLandFacilityById(id),  null);
+                        break;
+                    }
+                case 3:
+                    using (var dataAccess = new DataAccess.Repositories.NonResidentialFacilityRepository(appSettings.ConnectionString))
+                    {
+                        facility = facility.ConvertDBFacilityToFacility(null, null, dataAccess.GetNonResidentialFacilityById(id));
+                        break;
+                    }
+            }            
+            return facility;
+        }
+
+        public Facility CreateFacility(Facility facility)
+        {
+            switch ((int)facility.FacilityTypes)
+            {
+                case 1:
+                    using (var dataAccess = new DataAccess.Repositories.DwellingFacilityRepository(appSettings.ConnectionString))
+                    {
+                        facility.Id = dataAccess.AddDwellingFacility(facility.ConvertToDwellingFacility(facility));                       
+                        break;
+                    }
+                case 2:
+                    using (var dataAccess = new DataAccess.Repositories.LandFacilityRepository(appSettings.ConnectionString))
+                    {
+                        facility.Id = dataAccess.AddLandFacility(facility.ConvertToLandFacility(facility));
+                        break;
+                    }
+                case 3:
+                    using (var dataAccess = new DataAccess.Repositories.NonResidentialFacilityRepository(appSettings.ConnectionString))
+                    {
+                        facility.Id = dataAccess.AddNonResidentialFacilities(facility.ConvertToNonResidentialFacility(facility));
+                        break;
+                    }
+            }
+            return facility;
+        }
+
+        public bool UpdateFacility(Facility facility)
+        {
+            bool isUpdated = false;
+            switch ((int)facility.FacilityTypes)
+            {
+                case 1:
+                    using (var dataAccess = new DataAccess.Repositories.DwellingFacilityRepository(appSettings.ConnectionString))
+                    {
+                        facility.Id = dataAccess.AddDwellingFacility(facility.ConvertToDwellingFacility(facility));
+                        break;
+                    }
+                case 2:
+                    using (var dataAccess = new DataAccess.Repositories.LandFacilityRepository(appSettings.ConnectionString))
+                    {
+                        facility.Id = dataAccess.AddLandFacility(facility.ConvertToLandFacility(facility));
+                        break;
+                    }
+                case 3:
+                    using (var dataAccess = new DataAccess.Repositories.NonResidentialFacilityRepository(appSettings.ConnectionString))
+                    {
+                        facility.Id = dataAccess.AddNonResidentialFacilities(facility.ConvertToNonResidentialFacility(facility));
+                        break;
+                    }
+            }
+            return isUpdated = true;
+        }
+
+        public bool DeleteFacility(Facility facility)
+        {
+            bool isDeleted = false;
+            facility.Status = "Deleted";
+            switch (facility.FacilityType)
+            {
+                case "Dwelling":
+                    using (var dataAccess = new DataAccess.Repositories.DwellingFacilityRepository(appSettings.ConnectionString))
+                    {                        
+                        dataAccess.UpdateDwellingFacility(facility.ConvertToDwellingFacility(facility));
+                        break;
+                    }
+                case "Land":
+                    using (var dataAccess = new DataAccess.Repositories.LandFacilityRepository(appSettings.ConnectionString))
+                    {
+                        dataAccess.UpdateLandFacility(facility.ConvertToLandFacility(facility));
+                        break;
+                    }
+                case "NonResidential":
+                    using (var dataAccess = new DataAccess.Repositories.NonResidentialFacilityRepository(appSettings.ConnectionString))
+                    {
+                        dataAccess.UpdateNonResidentialFacilities(facility.ConvertToNonResidentialFacility(facility));
+                        break;
+                    }
+            }
+            return isDeleted = true;
+        }       
 
         public void Dispose()
         {

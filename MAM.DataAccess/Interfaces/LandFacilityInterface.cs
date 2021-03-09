@@ -7,7 +7,7 @@ namespace MAM.DataAccess.Interfaces
 {
     public interface LandFacilityInterface
     {
-        void AddLandFacility(LandFacility landFacility);
+        int AddLandFacility(LandFacility landFacility);
         void UpdateLandFacility(LandFacility landFacility);
         List<LandFacility> GetLandFacilities();
         LandFacility GetLandFacilityById(int id);
